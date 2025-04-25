@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { Card } from '../../styles/global';
 
 interface ForecastItem {
   dt_txt: string;
@@ -32,9 +33,9 @@ export const TemperatureChart: React.FC<Props> = ({ items, unidade }) => {
   }));
 
   return (
-    <div style={{ width: '100%', height: 300 }}>
+    <Card>
       <h3>Gráfico de Temperatura</h3>
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
           <CartesianGrid stroke="#ccc" />
           <XAxis dataKey="name" />
@@ -45,6 +46,6 @@ export const TemperatureChart: React.FC<Props> = ({ items, unidade }) => {
           <Line type="monotone" dataKey="temp" stroke="#8884d8" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
-    </div>
+    </Card>
   );
 };

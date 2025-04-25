@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { citySuggestions } from '../../data/cities';
-import { Container, Input, Button, Toggle } from './styles';
+import { Container, Input, Button, Toggle, SuggestionsContainer, SuggestionItem } from './styles';
 
 interface SearchBarProps {
   onSearch: (cidade: string) => void;
@@ -52,7 +52,27 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         onSuggestionsFetchRequested={onSuggestionsFetchRequested}
         onSuggestionsClearRequested={onSuggestionsClearRequested}
         getSuggestionValue={getSuggestionValue}
-        renderSuggestion={renderSuggestion}
+        renderSuggestion={(suggestion, { isHighlighted }) => (
+          <SuggestionItem highlighted={isHighlighted}>
+            {suggestion}
+          </SuggestionItem>
+        )}
+        renderSuggestionsContainer={({ containerProps, children }) => (
+          <SuggestionsContainer {...containerProps}>
+            {children}
+          </SuggestionsContainer>
+        )}
+
+        theme={{
+          container: 'autosuggest-container',
+          suggestionsContainer: 'autosuggest-suggestions-container',
+          suggestionsList: 'autosuggest-suggestions-list',
+          suggestion: 'autosuggest-suggestion',
+          suggestionHighlighted: 'autosuggest-suggestion--highlighted'
+        }}
+        renderInputComponent={(inputProps) => (
+          <Input {...inputProps} />
+        )}
         inputProps={{
           placeholder: 'Digite uma cidade...',
           value,

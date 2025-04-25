@@ -1,5 +1,4 @@
 import 'leaflet/dist/leaflet.css';
-
 import React, { useState } from 'react';
 
 import { useWeather } from './hooks/useWeather';
@@ -8,27 +7,32 @@ import { ForecastList } from './components/ForecastList';
 import { TemperatureChart } from './components/TemperatureChart/TemperatureChart';
 import { TemperatureMap } from './components/TemperatureMap/TemperatureMap';
 import { SuggestedCities } from './components/SuggestedCities/SuggestedCities';
-import { Container, Title } from './styles/global';
+import { Container, TopBar, Title , CityName, Wrapper} from './styles/global';
 
 
 
 const App: React.FC = () => {
-  const [cidade, setCidade] = useState('');
+  const [cidade, setCidade] = useState('Porto');
   const [unidade, setUnidade] = useState<'metric' | 'imperial'>('metric');
   const { data, error } = useWeather(cidade, unidade);
 
   return (
     <Container>
-      <Title>Previsão de 5 Dias</Title>
-      <SuggestedCities onSelect={(city) => setCidade(city)} />
-      <SearchBar
-        onSearch={(city) => setCidade(city)}
-        onToggleUnit={() =>
-          setUnidade(u => (u === 'metric' ? 'imperial' : 'metric'))
-        }
-        unidade={unidade}
-      />
+      <TopBar>
+        <Title>Meteorologia</Title>
+        <CityName>{cidade}</CityName>
+      </TopBar> 
 
+      <Wrapper>
+        <SuggestedCities onSelect={(city) => setCidade(city)} />
+        <SearchBar
+          onSearch={(city) => setCidade(city)}
+          onToggleUnit={() =>
+            setUnidade(u => (u === 'metric' ? 'imperial' : 'metric'))
+          }
+          unidade={unidade}
+        />
+      </Wrapper>
       
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {data && (

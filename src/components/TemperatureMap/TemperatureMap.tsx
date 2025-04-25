@@ -1,5 +1,23 @@
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+
+import React, { useEffect} from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { Card } from '../../styles/global';
+import 'leaflet/dist/leaflet.css';
+
+import L from 'leaflet';
+import iconUrl from '../../assets/leaflet/marker-icon.png';
+import icon2xUrl from '../../assets/leaflet/marker-icon-2x.png';
+import shadowUrl from '../../assets/leaflet/marker-shadow.png';
+
+const LAYER = 'temp';
+L.Icon.Default.mergeOptions({
+  iconUrl,
+  iconRetinaUrl: icon2xUrl,
+  shadowUrl
+});
+
+
+
 
 interface Props {
   lat: number;
@@ -9,14 +27,34 @@ interface Props {
   unidade: 'metric' | 'imperial';
 }
 
+function Recenter({ lat, lon }: { lat: number; lon: number }) {
+    const map = useMap();
+    useEffect(() => {
+      map.setView([lat, lon]);
+    }, [lat, lon, map]);
+    return null;
+  }
+
 export const TemperatureMap: React.FC<Props> = ({ lat, lon, cidade, temperatura, unidade }) => {
-  return (
-    <div style={{ width: '100%', height: '300px', marginTop: '1rem' }}>
+    const apiKey = process.env.REACT_APP_OWM_API_KEY;
+  
+    return (
+    <Card>
       <h3>Mapa de Temperatura</h3>
-      <MapContainer center={[lat, lon]} zoom={10} style={{ height: '100%', width: '100%' }}>
+      <MapContainer 
+        center={[lat, lon]} 
+        zoom={10} 
+        style={{ height: '300px', width: '100%' }}
+       >
+        <Recenter lat={lat} lon={lon} />
+
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; OpenStreetMap contributors'
+        />
+        <TileLayer
+          url={`https://tile.openweathermap.org/map/${LAYER}/{z}/{x}/{y}.png?appid=${apiKey}`}
+          opacity={0.5} // Set the opacity for the weather layer
         />
         <Marker position={[lat, lon]}>
           <Popup>
@@ -24,6 +62,6 @@ export const TemperatureMap: React.FC<Props> = ({ lat, lon, cidade, temperatura,
           </Popup>
         </Marker>
       </MapContainer>
-    </div>
+    </Card>
   );
 };

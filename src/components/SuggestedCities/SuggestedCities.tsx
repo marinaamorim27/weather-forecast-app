@@ -1,4 +1,5 @@
 import React from 'react';
+import { Wrapper, CityButton } from './styles';
 
 interface SuggestedCitiesProps {
   onSelect: (city: string) => void;
@@ -12,24 +13,14 @@ const cities = [
 export const SuggestedCities: React.FC<SuggestedCitiesProps> = ({ onSelect }) => {
   return (
     <div style={{ marginTop: '1rem' }}>
-      <h3>Cidades sugeridas:</h3>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+
+      <Wrapper>
         {cities.map((city) => (
-          <button
-            key={city}
-            onClick={() => onSelect(city)}
-            style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              border: '1px solid #ccc',
-              cursor: 'pointer',
-              backgroundColor: '#f0f0f0',
-            }}
-          >
+          <CityButton key={city} onClick={() => onSelect(city)}>
             {city}
-          </button>
+          </CityButton>
         ))}
-      </div>
+      </Wrapper>
     </div>
   );
 };
