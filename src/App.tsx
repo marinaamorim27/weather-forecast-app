@@ -1,8 +1,16 @@
+import 'leaflet/dist/leaflet.css';
+
 import React, { useState } from 'react';
+
 import { useWeather } from './hooks/useWeather';
 import { SearchBar } from './components/SearchBar';
 import { ForecastList } from './components/ForecastList';
+import { TemperatureChart } from './components/TemperatureChart/TemperatureChart';
+import { TemperatureMap } from './components/TemperatureMap/TemperatureMap';
+import { SuggestedCities } from './components/SuggestedCities/SuggestedCities';
 import { Container, Title } from './styles/global';
+
+
 
 const App: React.FC = () => {
   const [cidade, setCidade] = useState('');
@@ -12,8 +20,9 @@ const App: React.FC = () => {
   return (
     <Container>
       <Title>Previsão de 5 Dias</Title>
+      <SuggestedCities onSelect={(city) => setCidade(city)} />
       <SearchBar
-        onSearch={setCidade}
+        onSearch={(city) => setCidade(city)}
         onToggleUnit={() =>
           setUnidade(u => (u === 'metric' ? 'imperial' : 'metric'))
         }
@@ -23,9 +32,24 @@ const App: React.FC = () => {
       
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {data && (
-        <ForecastList 
-          items={data.list.filter((_,i) => i % 8 === 0).slice(0, 5)} 
-          unidade={unidade} />)}
+        <>
+          <ForecastList 
+            items={data.list.filter((_,i) => i % 8 === 0).slice(0, 5)} 
+            unidade={unidade} 
+          />
+          <TemperatureChart
+            items={data.list.filter((_,i) => i % 8 === 0).slice(0, 5)}
+            unidade={unidade}
+          />
+          <TemperatureMap
+            lat={data.city.coord.lat}
+            lon={data.city.coord.lon}
+            cidade={data.city.name}
+            temperatura={data.list[0].main.temp}
+            unidade={unidade}
+          />
+        </>
+      )}
     </Container>
   );
 };

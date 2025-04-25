@@ -8,6 +8,13 @@ export interface ForecastItem {
 
 export interface ForecastResponse {
   list: ForecastItem[];
+  city: {
+    name: string;
+    coord: {
+      lat: number;
+      lon: number;
+    };
+  };
 }
 
 export async function fetchForecast(
